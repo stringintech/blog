@@ -9,7 +9,7 @@ weight: 1
 
 ## Introduction
 
-In database management, handling large-scale data operations efficiently is critical. One common challenge is executing mass deletions on large tables without dragging down overall performance. This article looks at how PostgreSQL’s table partitioning feature can significantly speed up the process and help maintain smooth database operations.
+In database management, handling large-scale data operations efficiently is critical. One common challenge is executing mass deletions on large tables without dragging down overall performance. This article looks at how PostgreSQL's table partitioning feature can significantly speed up the process and help maintain smooth database operations.
 
 ## The Challenge of Mass Deletions
 
@@ -27,13 +27,25 @@ Table partitioning is a technique where a large table is divided into smaller, m
 
 ## My Benchmark Setup
 
-To quantify the benefits of partitioning, I set up a benchmark with three scenarios using PostgreSQL 16.4:
+To quantify the benefits of partitioning, I set up a benchmark with three scenarios using PostgreSQL in a containerized environment:
 
 1. **Simple Table:** A standard, non-partitioned table
 2. **Partitioned Table (Row Deletion):** A table partitioned by week, deleting rows from the first week
 3. **Partitioned Table (Partition Drop):** Same as #2, but dropping the entire first week's partition
 
-I populated each table with 4 million records (about 1 million per week) and ran each scenario five times to get averaged results.
+### PostgreSQL Container Specifications
+
+- PostgreSQL Version: 16.4
+- Docker Version: 27.0.3
+- Resource Limits:
+  - CPU Limit: 8 CPUs
+  - Memory Limit: 1 GB
+
+### Data Characteristics
+
+- Total Records: 4 million
+- Distribution: Evenly distributed over 4 weeks (1 million per week)
+- Indexing: Both tables (simple and partitioned) have an index on the `time` column
 
 ## Key Findings
 
@@ -66,6 +78,9 @@ CREATE TABLE records (
 
 CREATE TABLE records_week_1 PARTITION OF records
     FOR VALUES FROM ('2023-01-01') TO ('2023-01-08');
+
+-- Create index on the partition
+CREATE INDEX idx_records_week_1_time ON records_week_1 (time);
 
 -- To delete a week's worth of data:
 ALTER TABLE records DETACH PARTITION records_week_1;
