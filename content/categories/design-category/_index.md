@@ -1,5 +1,5 @@
 ---
-title: Open Source
+title: Design
 #description: A description of this category
 image:
 
