@@ -5,6 +5,6 @@ image:
 
 # Badge style
 style:
-    background: "#2a9d8f"
+    background: "#483040"  # Muted burgundy/wine color
     color: "#fff"
 ---

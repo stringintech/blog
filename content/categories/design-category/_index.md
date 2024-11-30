@@ -5,6 +5,6 @@ image:
 
 # Badge style
 style:
-    background: "#2a9d8f"
+    background: "#2d4a3e"  # Dark forest green
     color: "#fff"
 ---

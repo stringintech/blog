@@ -1,9 +1,10 @@
 ---
 title: "Understanding JWT Authentication: Spring Security's Architecture and Go Implementation"
-date: 2024-11-30 00:00:00+0000
+date: 2024-11-30 15:20:00+0000
 image:
 tags:
-  - Database
+  - Spring
+  - Security
 weight: 1
 ---
 
@@ -49,7 +50,7 @@ Later in the chain, `AuthorizationFilter` checks if the request is properly auth
 
 If all filters pass, the request reaches Spring's `DispatcherServlet` which routes it to the [getAuthenticatedUser](https://github.com/stringintech/security-101/blob/9be5bc387208fa8ade2edb35431ecace769f52f7/java/src/main/java/com/stringintech/security101/controller/UserController.java#L57) endpoint in `UserController`. This endpoint retrieves the authenticated user information from SecurityContextHolder that was populated during the filter chain process.
 
-Note: Spring Security combines filters with specialized components (like `AuthorizationManager` in AuthorizationFilter) to handle various security concerns. However, to understand the core authentication flow, I focused on the key players.
+**Note:** Spring Security employs a rich ecosystem of filters and specialized components to handle various security concerns. To understand the core authentication flow, I only focused on the key players in JWT token validation and user authentication.
 
 ## Go Implementation: Mapping Components
 
