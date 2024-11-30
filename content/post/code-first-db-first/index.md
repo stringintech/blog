@@ -6,6 +6,7 @@ tags:
   - Database
   - Design
 weight: 1
+draft: true
 ---
 
 ## Introduction
