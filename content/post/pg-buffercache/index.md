@@ -69,6 +69,7 @@ FROM   pg_class
 WHERE  relname = 'buffer_test';
 ```
 
+
 | relpages | reltuples |
 |----------|-----------|
 | 0        | 0         |
@@ -82,9 +83,11 @@ FROM   pg_class
 WHERE  relname = 'buffer_test';
 ```
 
+
 | relpages | reltuples |
 |----------|-----------|
 | 14,286   | 100,000   |
+
 Here:
 - `relpages`: Number of disk pages the table uses
 - `reltuples`: Estimated number of rows
@@ -99,6 +102,7 @@ JOIN      pg_class c
   ON      b.relfilenode = c.relfilenode
 WHERE     c.relname = 'buffer_test';
 ```
+
 
 | count |
 |-------|
@@ -116,9 +120,11 @@ JOIN      pg_class c
 WHERE     c.relname = 'buffer_test';
 ```
 
+
 | count |
 |-------|
 | 32    |
+
 You may have expected to see only one page loaded into memory since the row we queried earlier belongs to one page. But it's not the case. Since we have not introduced any indexes on the id column yet, database cannot efficiently find that one page and it has to do a sequential scan which causes PostgreSQL to read through all table pages from the beginning until it finds our target row. The number of pages loaded depends on various factors including the database's buffer replacement strategy.
 
 ### Adding an Index
@@ -140,9 +146,11 @@ FROM      buffer_test
 WHERE     id = 70000;
 ```
 
+
 | ctid      | id    |
 |-----------|-------|
 | (9999,7)  | 70000 |
+
 The `ctid` (Tuple ID) is a special system column in PostgreSQL that represents the physical location of a row **version** within its table. Every row in a PostgreSQL table has a Tuple ID that consists of two numbers: the block number (or page number) and the tuple index within that block. Here `ctid` shows our row is on page 9999. Let's check the buffer cache:
 
 ```sql
@@ -154,6 +162,7 @@ JOIN      pg_class c
   ON      b.relfilenode = c.relfilenode  
 WHERE     c.relname = 'buffer_test';
 ```
+
 
 | bufferid | relblocknumber | isdirty |
 |----------|----------------|----------|
@@ -181,9 +190,11 @@ JOIN      pg_class c
 WHERE     c.relname = 'buffer_test';
 ```
 
+
 | bufferid | relblocknumber | isdirty |
 |----------|----------------|----------|
 | 149      | 9999          | true     |
+
 The page is now marked dirty, indicating pending changes.
 
 ### Understanding Checkpoints
@@ -209,6 +220,7 @@ WHERE     c.relname = 'buffer_test';
 | bufferid | relblocknumber | isdirty |
 | -------- | -------------- | ------- |
 | 149      | 9999           | false   |
+
 Not dirty anymore but still in cache!
 
 ## Conclusion
