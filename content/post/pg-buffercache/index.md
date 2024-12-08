@@ -44,6 +44,7 @@ We'll follow these steps to understand buffer cache behavior:
 4. Add an index to see how it affects page loading patterns
 5. Track how buffer cache state changes when we modify data
 6. See how system processes handle dirty (modified) pages
+7. Compare query performance for cached vs uncached data
 
 ### Setting Up Our Test Environment
 
@@ -236,8 +237,48 @@ WHERE     c.relname = 'buffer_test';
 
 Not dirty anymore but still in cache!
 
+### Comparing Cached vs Uncached Access
+
+Let's demonstrate the performance benefit of the buffer cache by comparing access times for cached and uncached data. First we query the page number for other rows around the row with id `70000` that we have been working with so far:
+
+```sql
+SELECT    ctid, id 
+FROM      buffer_test 
+WHERE     id between 69997 and 70003;
+```
+
+```
+| ctid      | id    |  
+|-----------|-------|  
+| (9999,4)  | 69997 |  
+| (9999,5)  | 69998 |  
+| (9999,6)  | 69999 |  
+| (9999,8)  | 70000 |  
+| (10000,1) | 70001 |  
+| (10000,2) | 70002 |  
+| (10000,3) | 70003 |
+```
+
+Now restart the database server once more to make sure we continue with a clean cache. Then query the id `70000` as we did before to load the page `9999` into buffer cache. Now we are ready to perform our comparison using `EXPLAIN ANALYSE`:
+
+```sql
+EXPLAIN ANALYSE
+SELECT    ctid, id 
+FROM      buffer_test 
+WHERE     id = 69997;
+-- Execution Time: 0.046 ms
+```
+
+```sql
+EXPLAIN ANALYSE
+SELECT    ctid, id 
+FROM      buffer_test 
+WHERE     id = 10;
+-- Execution Time: 0.604 ms
+```
+
+As you see the execution time for accessing the cached data (row with id `69997` belongs the cached page `9999`) is about 13 times smaller than the uncached access!
+
 ## Conclusion
 
-We explored PostgreSQL's buffer cache through practical examples that demonstrated its basic memory management behavior. By creating a test table and using monitoring tools, we observed how data pages move between disk and memory during different operations. Our experiments showed how queries without indexes lead to sequential scans that load multiple pages into memory, while adding an index allowed PostgreSQL to load only the specific page needed. We also saw how pages get marked as "dirty" when modified and remain in cache even after a checkpoint writes them to disk.
-
-Using PostgreSQL's monitoring tools like `pg_buffercache`, along with system catalogs like `pg_class`, we were able to observe these buffer cache behaviors in real-time. This hands-on exploration provided us with a practical understanding of PostgreSQL's fundamental memory management, which can help inform decisions about when additional optimization techniques might be needed.
+We explored PostgreSQL's buffer cache through practical examples that demonstrated its basic memory management behavior. By creating a test table and using monitoring tools, we observed how data pages move between disk and memory during different operations. Our experiments showed how queries without indexes lead to sequential scans that load multiple pages into memory, while adding an index allowed PostgreSQL to load only the specific page needed. We also saw how pages get marked as "dirty" when modified and remain in cache even after a checkpoint writes them to disk. Finally, we demonstrated how PostgreSQL's buffer cache optimization works in practice by comparing query times between accessing rows from previously loaded pages versus pages that required fresh disk reads.
