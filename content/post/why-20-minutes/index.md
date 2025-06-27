@@ -13,7 +13,7 @@ Earlier, I was reading an interesting [mathematical explanation](https://r6.ca/b
 
 To explore what the article was saying, I had an idea. I thought: What if I generate lots of intervals whose average is 10 minutes, and then string them together to create a timeline? Next, I’d generate a bunch of random points along this timeline, and for each one, check which interval it falls into, calculating the distance from the point to the start of the interval and to the end. By averaging these distances, I should be able to see for myself that, on average, the end of the interval is 10 minutes away, the start of the interval block 10 minutes ago, and the full interval adds up to 20 minutes.
 
-I wrote a little piece of [code](https://github.com/stringintech/btc-vault/blob/main/Chaincode%20Seminars/Bitcoin/Mining%20and%20Network%20Block%20Propagation/why-20-minutes/main.cpp) to do just that—and, unsuprisingly, the results matched my expectations:
+I wrote a little piece of code to do just that—and, unsuprisingly, the results matched my expectations:
 
 ```
 Average block interval: 10.0339
