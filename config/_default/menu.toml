@@ -22,3 +22,11 @@ url = "https://x.com/stringintech"
 
 [social.params]
 icon = "brand-twitter"
+
+[[social]]
+identifier = "email"
+name = "Email"
+url = "mailto:stringintech@gmail.com"
+
+[social.params]
+icon = "mail"
