@@ -1,4 +1,5 @@
 ---
+title: "Stringintech Blog"
 menu:
     main:
         name: Home
