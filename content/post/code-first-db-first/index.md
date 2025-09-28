@@ -4,7 +4,6 @@ date: 2024-10-15 00:00:00+0000
 image:
 tags:
   - Database
-  - Design
 weight: 1
 draft: true
 ---

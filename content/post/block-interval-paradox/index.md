@@ -4,7 +4,6 @@ date: 2025-04-12 13:30:00+0000
 image:
 tags:
   - Bitcoin
-  - Blockchain
 weight: 1
 ---
 

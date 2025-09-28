@@ -4,8 +4,8 @@ date: 2025-02-19 19:00:00+0000
 image:
 tags:
   - Bitcoin
-  - Blockchain
 weight: 1
+draft: true
 ---
 
 In my spare time exploring Bitcoin Core, a recent mempool redesign [proposal](https://github.com/bitcoin/bitcoin/issues/27677) caught my attention, particularly a section demonstrating how transaction eviction and mining aren't symmetrical operations. To better understand this and get hands-on experience with Bitcoin Core's testing framework, I wrote integration tests to validate this behavior.

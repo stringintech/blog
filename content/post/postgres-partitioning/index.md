@@ -4,6 +4,7 @@ date: 2024-10-06 00:00:00+0000
 image:
 tags:
   - Database
+  - PostgreSQL
 weight: 1
 ---
 
