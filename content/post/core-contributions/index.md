@@ -4,6 +4,7 @@ date: 2025-10-22 11:00:00+0000
 image:
 tags:
 weight: 1
+draft: true
 ---
 
 Following my departure from my previous job to focus full-time on Bitcoin Core in early October, this post summarizes my contributions from March through October 2025.
